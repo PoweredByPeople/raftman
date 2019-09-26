@@ -1,7 +1,7 @@
 package frontend
 
 import (
-	"github.com/pierredavidbelanger/raftman/spi"
+	"github.com/PoweredByPeople/raftman/spi"
 	"net/url"
 	"net/http"
 	"os"
@@ -27,14 +27,13 @@ func (f *uiFrontend) Start() error {
 	mux := http.NewServeMux()
 	mux.HandleFunc(f.path+"api/stat", f.api.handleStat)
 	mux.HandleFunc(f.path+"api/list", f.api.handleList)
-	var useLocal bool
 	if _, err := os.Stat("frontend/static/ui/index.html"); err == nil {
-		useLocal = true
 	}
-	mux.Handle(f.path, http.FileServer(Dir(useLocal, "/frontend/static/ui")))
+	mux.Handle(f.path, http.FileServer(http.Dir("/frontend/static/ui")))
 	return f.startHandler(mux)
 }
 
 func (f *uiFrontend) Close() error {
 	return f.close()
 }
+
